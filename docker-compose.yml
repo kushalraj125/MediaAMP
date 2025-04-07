@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_ENV=development
+      - DATABASE_URL=postgresql://postgres:root@db:5432/task_manager
+      - REDIS_URL=redis://redis:6379/0
+      - FLASK_APP=run.py
+    depends_on:
+      - db
+      - redis
+    command: >
+      sh -c "flask db init && 
+             flask db migrate -m 'Initial migration' &&
+             flask db upgrade &&
+             gunicorn --bind 0.0.0.0:5000 --reload run:app"
+
+  db:
+    image: postgres:17
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=task_manager
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  postgres_data:
+  redis_data:
