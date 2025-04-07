@@ -35,7 +35,7 @@ A Flask-based API for task management, including user creation, task creation, l
 ## Use Python 3.11.7 
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/kushalraj125/MediaAMP.git
 cd flaskapp
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
